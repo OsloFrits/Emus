@@ -1,5 +1,7 @@
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 
 public class Alarme {
     private static Alarme instance = null; //Permite apenas criar um obj alarme, provalvelmente iremos trocar isso
@@ -21,7 +23,11 @@ public class Alarme {
     public LocalTime getHoraAtual(){
         return LocalTime.now();
     }
+    public LocalDate getDataAtual(){
+        LocalDate data = LocalDate.now();
+        return data;
+    }
     public String toString() {
         return "";
-    }
+    } //Precisamos criar um metodo toString ou so damos override??
 }
