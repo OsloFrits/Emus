@@ -1,14 +1,29 @@
 import java.time.LocalTime;
 
-public class Pomodoro extends Evento {
+public class Pomodoro extends Evento implements Temporizador{
     LocalTime tempoDeFoco, tempoDeDescanso;
-    boolean pausa;
+    private EstadoPomodoro estadoPomodoro;
 
     public Pomodoro(String nome, String descricao, int pontuacao, LocalTime tempoDeFoco, LocalTime tempoDeDescanso) {
         super(nome, descricao, pontuacao);
         this.tempoDeFoco = tempoDeFoco;
         this.tempoDeDescanso = tempoDeDescanso;
-        this.pausa = false;
+        this.estadoPomodoro = EstadoPomodoro.Parado;
+    }
+
+    @Override
+    public void iniciarTemporizador() {
+        this.estadoPomodoro = EstadoPomodoro.Executando;
+    }
+
+    @Override
+    public void pausaTemporizador() {
+        this.estadoPomodoro = EstadoPomodoro.Pausado;
+    }
+
+    @Override
+    public void finalizarTemporizador() {
+        this.estadoPomodoro = EstadoPomodoro.Finalizado;
     }
 
     public LocalTime getTempoDeFoco() {
@@ -27,11 +42,4 @@ public class Pomodoro extends Evento {
         this.tempoDeDescanso = tempoDeDescanso;
     }
 
-    public boolean isPausa() {
-        return pausa;
-    }
-
-    public void setPausa(boolean pausa) {
-        this.pausa = pausa;
-    }
 }
