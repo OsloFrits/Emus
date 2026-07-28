@@ -3,23 +3,25 @@ import java.time.LocalTime;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Scanner input = new Scanner(System.in);
+        Duration tempoFoco, tempoDescanso;
 
-        int hrs=0, mins=0, segs=0;
+        tempoFoco = Duration.ofSeconds(10);
+        tempoDescanso = Duration.ofSeconds(10);
 
-/*        Alarme alarme = new Alarme();
+        Pomodoro pomodoro = new Pomodoro("joans", "é os joans", 10, tempoFoco, tempoDescanso);
 
-        LocalTime agora = alarme.getHoraAtual();
+        pomodoro.iniciarTemporizador();
 
+        while (true) {
+           if(pomodoro.getEstadoPomodoro() != EstadoPomodoro.Finalizado) {
+               System.out.printf("Tempo restante: ", pomodoro.getTempoRestante().toString());
+               Thread.sleep(1000);
+           }else{
+               break;
+           }
+        }
 
-          hrs = input.nextInt();
-          mins = input.nextInt();
-          segs = input.nextInt();
-          Duration duration = alarme.addTempo(hrs, mins, segs);
-
-          System.out.printf(agora.toString() + " Depois " + agora.plus(duration).toString());
-
-        System.out.printf(alarme.getDataAtual().toString());*/
     }
 }
