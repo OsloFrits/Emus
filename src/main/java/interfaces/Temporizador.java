@@ -1,3 +1,5 @@
+package interfaces;
+
 public interface Temporizador {
     void iniciarTemporizador();
     void pausaTemporizador();

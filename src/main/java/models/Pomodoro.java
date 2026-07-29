@@ -1,19 +1,24 @@
+package models;
+
+import enums.EstadoPomodoro;
+import interfaces.Temporizador;
+import service.JsonSave;
+
 import java.time.Duration;
-import java.time.LocalTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Pomodoro extends Evento implements Temporizador{
+public class Pomodoro extends Evento implements Temporizador {
     private Duration tempoDeFoco, tempoDeDescanso, tempoRestante;
     private EstadoPomodoro estadoPomodoro;
     private int id;
     private static int proximoId = 1;
-
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private  ScheduledExecutorService scheduler;
 
     public Pomodoro(String nome, String descricao, int pontuacao, Duration tempoDeFoco, Duration tempoDeDescanso) {
         super(nome, descricao, pontuacao);
+        criarSchedule();
         this.id = proximoId++;
         this.tempoDeFoco = tempoDeFoco;
         this.tempoDeDescanso = tempoDeDescanso;
@@ -26,6 +31,9 @@ public class Pomodoro extends Evento implements Temporizador{
             tempoRestante = tempoDeFoco;
         }else if(estadoPomodoro == EstadoPomodoro.Descansando) {
             tempoRestante = tempoDeDescanso;
+        }
+        if(scheduler.isTerminated() || scheduler.isShutdown()) {
+            criarSchedule();
         }
             scheduler.scheduleAtFixedRate(() -> {
                 tempoRestante = tempoRestante.minusSeconds(1);
@@ -41,14 +49,20 @@ public class Pomodoro extends Evento implements Temporizador{
 
     @Override
     public void pausaTemporizador() {
-
+        estadoPomodoro = EstadoPomodoro.Pausado;
+        scheduler.shutdownNow();
     }
 
     @Override
     public void finalizarTemporizador() {
-        this.estadoPomodoro = EstadoPomodoro.Finalizado;
+        estadoPomodoro = EstadoPomodoro.Finalizado;
         JsonSave.salvar(this, "Pomodoro"+id);
     }
+
+    private void criarSchedule(){
+        this.scheduler = Executors.newSingleThreadScheduledExecutor();
+    }
+
     public EstadoPomodoro getEstadoPomodoro() {
         return estadoPomodoro;
     }

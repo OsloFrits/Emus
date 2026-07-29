@@ -1,5 +1,8 @@
+import models.Pomodoro;
+import models.Alarme;
+import models.Tarefa;
+
 import java.time.Duration;
-import java.time.LocalTime;
 import java.util.Scanner;
 
 public class Main {
@@ -16,7 +19,14 @@ public class Main {
 
         System.out.println(pomodoro.getTempoRestante());
 
+        Thread.sleep(3000);
 
+        pomodoro.pausaTemporizador();
 
+        System.out.println("\n");
+
+        pomodoro.iniciarTemporizador();
+
+        System.out.println(pomodoro.getTempoRestante());
     }
 }

@@ -1,3 +1,5 @@
+package models;
+
 abstract class Evento {
     private String nome, descricao;
     private int pontuacao, id;

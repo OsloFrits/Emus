@@ -1,10 +1,13 @@
+package models;
+
+import interfaces.Temporizador;
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 
-public class Alarme extends Evento implements Temporizador{
+public class Alarme extends Evento implements Temporizador {
 
     private LocalDateTime dataEHora;
 
