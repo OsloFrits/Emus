@@ -2,8 +2,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Tarefa extends Evento{
-    LocalDateTime dataEHoraLimite;
-    Boolean estaAtiva, estaConcluida;
+    private LocalDateTime dataEHoraLimite;
+    private Boolean estaAtiva, estaConcluida;
 
     public Tarefa(String nome, String descricao, int pontuacao, LocalDateTime dataEHoraLimite){
         super(nome, descricao, pontuacao);

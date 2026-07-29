@@ -1,6 +1,6 @@
 abstract class Evento {
-    String nome, descricao;
-    int pontuacao, id;
+    private String nome, descricao;
+    private int pontuacao, id;
     public Evento(String nome, String descricao, int pontuacao) {
         this.nome = nome;
         this.descricao = descricao;

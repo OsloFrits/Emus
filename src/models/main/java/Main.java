@@ -14,14 +14,9 @@ public class Main {
 
         pomodoro.iniciarTemporizador();
 
-        while (true) {
-           if(pomodoro.getEstadoPomodoro() != EstadoPomodoro.Finalizado) {
-               System.out.printf("Tempo restante: ", pomodoro.getTempoRestante().toString());
-               Thread.sleep(1000);
-           }else{
-               break;
-           }
-        }
+        System.out.println(pomodoro.getTempoRestante());
+
+
 
     }
 }

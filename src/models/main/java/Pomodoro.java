@@ -5,14 +5,16 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Pomodoro extends Evento implements Temporizador{
-    Duration tempoDeFoco, tempoDeDescanso, tempoRestante;
-    LocalTime duracao;
+    private Duration tempoDeFoco, tempoDeDescanso, tempoRestante;
     private EstadoPomodoro estadoPomodoro;
+    private int id;
+    private static int proximoId = 1;
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     public Pomodoro(String nome, String descricao, int pontuacao, Duration tempoDeFoco, Duration tempoDeDescanso) {
         super(nome, descricao, pontuacao);
+        this.id = proximoId++;
         this.tempoDeFoco = tempoDeFoco;
         this.tempoDeDescanso = tempoDeDescanso;
         this.estadoPomodoro = EstadoPomodoro.Parado;
@@ -25,28 +27,28 @@ public class Pomodoro extends Evento implements Temporizador{
         }else if(estadoPomodoro == EstadoPomodoro.Descansando) {
             tempoRestante = tempoDeDescanso;
         }
-        scheduler.scheduleAtFixedRate(() -> {
-            tempoRestante = tempoRestante.minusSeconds(1);
+            scheduler.scheduleAtFixedRate(() -> {
+                tempoRestante = tempoRestante.minusSeconds(1);
 
-            System.out.println(tempoRestante);
+                System.out.println(tempoRestante); //Apenas para ver se esta funcionando
 
-            if (tempoRestante.isZero() || tempoRestante.isNegative()) {
-                estadoPomodoro = EstadoPomodoro.Finalizado;
-                scheduler.shutdown();
-            }
-        }, 0, 1, TimeUnit.SECONDS);
+                if (tempoRestante.isZero() || tempoRestante.isNegative()) {
+                    scheduler.shutdown();
+                    finalizarTemporizador();
+                }
+            }, 0, 1, TimeUnit.SECONDS);
     }
 
     @Override
     public void pausaTemporizador() {
-        this.estadoPomodoro = EstadoPomodoro.Pausado;
+
     }
 
     @Override
     public void finalizarTemporizador() {
         this.estadoPomodoro = EstadoPomodoro.Finalizado;
+        JsonSave.salvar(this, "Pomodoro"+id);
     }
-
     public EstadoPomodoro getEstadoPomodoro() {
         return estadoPomodoro;
     }

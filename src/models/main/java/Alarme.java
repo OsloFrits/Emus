@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Alarme extends Evento implements Temporizador{
 
-    LocalDateTime dataEHora;
+    private LocalDateTime dataEHora;
 
     public Alarme(LocalDateTime dataEHora, String nome, String descricao, int pontuacao){
         super(nome, descricao, pontuacao);
