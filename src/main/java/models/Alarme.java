@@ -74,16 +74,8 @@ public class Alarme extends Evento implements Temporizador {
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
     }
 
-    public LocalTime getHoraAtual(){
-        return LocalTime.now();
-    }
-    public LocalDate getDataAtual(){
-        LocalDate data = LocalDate.now();
-        return data;
-    }
-
-    public LocalDateTime getDataEHora() {
-        return dataEHora;
+    public LocalDateTime getHoraAtual(){
+        return LocalDateTime.now();
     }
 
     public void setDataEHora(LocalDateTime dataEHora) {
