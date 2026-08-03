@@ -12,14 +12,11 @@ import java.util.concurrent.TimeUnit;
 public class Pomodoro extends Evento implements Temporizador {
     private Duration tempoDeFoco, tempoDeDescanso, tempoRestante;
     private EstadoPomodoro estadoPomodoro;
-    private int id;
-    private static int proximoId = 1;
     private  ScheduledExecutorService scheduler;
 
     public Pomodoro(String nome, String descricao, int pontuacao, Duration tempoDeFoco, Duration tempoDeDescanso) {
         super(nome, descricao, pontuacao);
         criarSchedule();
-        this.id = proximoId++;
         this.tempoDeFoco = tempoDeFoco;
         this.tempoDeDescanso = tempoDeDescanso;
         this.estadoPomodoro = EstadoPomodoro.Parado;
@@ -38,7 +35,7 @@ public class Pomodoro extends Evento implements Temporizador {
             scheduler.scheduleAtFixedRate(() -> {
                 tempoRestante = tempoRestante.minusSeconds(1);
 
-                System.out.println(tempoRestante); //Apenas para ver se esta funcionando
+                //System.out.println(tempoRestante); //Apenas para ver se esta funcionando
 
                 if (tempoRestante.isZero() || tempoRestante.isNegative()) {
                     scheduler.shutdown();
@@ -56,7 +53,7 @@ public class Pomodoro extends Evento implements Temporizador {
     @Override
     public void finalizarTemporizador() {
         estadoPomodoro = EstadoPomodoro.Finalizado;
-        JsonSave.salvar(this, "Pomodoro"+id);
+        JsonSave.salvar(this, "Pomodoro" + super.getId());
     }
 
     private void criarSchedule(){
