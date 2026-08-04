@@ -3,20 +3,22 @@ package models;
 import enums.EstadoPomodoro;
 import interfaces.Temporizador;
 import service.JsonSave;
+import service.TemporizadorService;
 
 import java.time.Duration;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Pomodoro extends Evento implements Temporizador {
     private Duration tempoDeFoco, tempoDeDescanso, tempoRestante;
     private EstadoPomodoro estadoPomodoro;
-    private  ScheduledExecutorService scheduler;
+    private final ScheduledExecutorService scheduler;
+    private ScheduledFuture<?> pomodoro;
 
-    public Pomodoro(String nome, String descricao, int pontuacao, Duration tempoDeFoco, Duration tempoDeDescanso) {
+    public Pomodoro(String nome, String descricao, int pontuacao, Duration tempoDeFoco, Duration tempoDeDescanso, TemporizadorService temporizadorService) {
         super(nome, descricao, pontuacao);
-        criarSchedule();
+        this.scheduler = temporizadorService.getScheduler();
         this.tempoDeFoco = tempoDeFoco;
         this.tempoDeDescanso = tempoDeDescanso;
         this.estadoPomodoro = EstadoPomodoro.Parado;
@@ -29,17 +31,15 @@ public class Pomodoro extends Evento implements Temporizador {
         }else if(estadoPomodoro == EstadoPomodoro.Descansando) {
             tempoRestante = tempoDeDescanso;
         }
-        if(scheduler.isTerminated() || scheduler.isShutdown()) {
-            criarSchedule();
-        }
-            scheduler.scheduleAtFixedRate(() -> {
+
+            pomodoro = scheduler.scheduleAtFixedRate(() -> {
                 tempoRestante = tempoRestante.minusSeconds(1);
 
-                //System.out.println(tempoRestante); //Apenas para ver se esta funcionando
+                System.out.println(tempoRestante); //Apenas para ver se esta funcionando
 
                 if (tempoRestante.isZero() || tempoRestante.isNegative()) {
-                    scheduler.shutdown();
-                    finalizarTemporizador();
+                    pomodoro.cancel(false);
+                    pararTemporizador();
                 }
             }, 0, 1, TimeUnit.SECONDS);
     }
@@ -47,17 +47,15 @@ public class Pomodoro extends Evento implements Temporizador {
     @Override
     public void pausaTemporizador() {
         estadoPomodoro = EstadoPomodoro.Pausado;
-        scheduler.shutdownNow();
+        if(pomodoro != null){
+            pomodoro.cancel(false);
+        }
     }
 
     @Override
-    public void finalizarTemporizador() {
+    public void pararTemporizador() {
         estadoPomodoro = EstadoPomodoro.Finalizado;
         JsonSave.salvar(this, "Pomodoro" + super.getId());
-    }
-
-    private void criarSchedule(){
-        this.scheduler = Executors.newSingleThreadScheduledExecutor();
     }
 
     public EstadoPomodoro getEstadoPomodoro() {

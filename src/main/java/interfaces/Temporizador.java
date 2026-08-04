@@ -1,7 +1,10 @@
 package interfaces;
 
+import java.time.Duration;
+
 public interface Temporizador {
     void iniciarTemporizador();
     void pausaTemporizador();
-    void finalizarTemporizador();
+    void pararTemporizador();
+    Duration getTempoRestante();
 }
