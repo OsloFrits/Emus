@@ -1,6 +1,8 @@
 package models;
 
-abstract class Evento {
+import interfaces.Temporizador;
+
+abstract class Evento implements Temporizador {
     private String nome="", descricao="";
     private int pontuacao=0, id;
     private static int proximoId=1;
