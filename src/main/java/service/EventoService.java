@@ -38,4 +38,11 @@ public class EventoService {
                 })
                 .toList();
     }
+    public List<Tarefa> getTarefas(){
+        return agenda.values()
+                .stream()
+                .filter(evento -> evento instanceof Tarefa)
+                .map(evento -> (Tarefa) evento)
+                .toList();
+    }
 }
