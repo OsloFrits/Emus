@@ -74,6 +74,10 @@ public class Alarme extends Evento implements Temporizador {
 
     }
 
+    public LocalDateTime getDataEHora() {
+        return dataEHora;
+    }
+
     public LocalDateTime getHoraAtual(){
         return LocalDateTime.now();
     }

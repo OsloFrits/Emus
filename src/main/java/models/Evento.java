@@ -2,7 +2,7 @@ package models;
 
 import interfaces.Temporizador;
 
-abstract class Evento implements Temporizador {
+public abstract class Evento implements Temporizador {
     private String nome="", descricao="";
     private int pontuacao=0, id;
     private static int proximoId=1;
@@ -16,10 +16,6 @@ abstract class Evento implements Temporizador {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getPontuacao() {
