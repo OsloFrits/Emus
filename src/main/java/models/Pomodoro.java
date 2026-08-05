@@ -10,7 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class Pomodoro extends Evento implements Temporizador {
+public class Pomodoro extends Evento{
     private Duration tempoDeFoco, tempoDeDescanso, tempoRestante;
     private EstadoPomodoro estadoPomodoro;
     private final ScheduledExecutorService scheduler;

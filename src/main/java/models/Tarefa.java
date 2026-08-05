@@ -10,7 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class Tarefa extends Evento implements Temporizador {
+public class Tarefa extends Evento{
     private LocalDateTime dataEHoraLimite;
     private Boolean estaAtiva, estaConcluida;
     private final ScheduledExecutorService scheduler;

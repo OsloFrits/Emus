@@ -10,7 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class Alarme extends Evento implements Temporizador {
+public class Alarme extends Evento {
 
     private LocalDateTime dataEHora;
     private final ScheduledExecutorService scheduler;
