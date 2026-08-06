@@ -1,6 +1,5 @@
 package models;
 
-import interfaces.Temporizador;
 import service.JsonSave;
 import service.TemporizadorService;
 
@@ -10,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class Alarme extends Evento {
+public class Alarme extends EventoAgendavel {
 
     private LocalDateTime dataEHora;
     private final ScheduledExecutorService scheduler;
@@ -41,9 +40,6 @@ public class Alarme extends Evento {
         }
         Duration atraso = Duration.between(LocalDateTime.now(), dataEHora);
         ativo = true;
-        if(scheduler.isTerminated() || scheduler.isShutdown() || scheduler==null) {
-
-        }
         alarme = scheduler.schedule(
                 this::pararTemporizador, //Fazer com this:: Impede q o metodo finalizarTemporizador seja chamado antes do previsto.
                 atraso.getSeconds(),
@@ -65,24 +61,13 @@ public class Alarme extends Evento {
         JsonSave.salvar(this, "Alarme" + super.getId());
     }
 
-    @Override
-    public Duration getTempoRestante() {
-        return null;
-    }
-
     public void tocarAlarme(){
 
     }
 
+    @Override
     public LocalDateTime getDataEHora() {
         return dataEHora;
     }
 
-    public LocalDateTime getHoraAtual(){
-        return LocalDateTime.now();
-    }
-
-    public void setDataEHora(LocalDateTime dataEHora) {
-        this.dataEHora = dataEHora;
-    }
 }

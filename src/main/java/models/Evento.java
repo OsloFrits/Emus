@@ -2,6 +2,8 @@ package models;
 
 import interfaces.Temporizador;
 
+import java.time.Duration;
+
 public abstract class Evento implements Temporizador {
     private String nome="", descricao="";
     private int pontuacao=0, id;
@@ -14,8 +16,31 @@ public abstract class Evento implements Temporizador {
         this.id = proximoId++;
     }
 
+    protected Evento() {
+    }
+
     public int getId() {
         return id;
+    }
+
+    @Override
+    public void iniciarTemporizador() {
+
+    }
+
+    @Override
+    public void pausaTemporizador() {
+
+    }
+
+    @Override
+    public void pararTemporizador() {
+
+    }
+
+    @Override
+    public Duration getTempoRestante() {
+        return null;
     }
 
     public int getPontuacao() {

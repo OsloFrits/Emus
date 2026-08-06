@@ -1,6 +1,5 @@
 package models;
 
-import interfaces.Temporizador;
 import service.JsonSave;
 import service.TemporizadorService;
 
@@ -10,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class Tarefa extends Evento{
+public class Tarefa extends EventoAgendavel {
     private LocalDateTime dataEHoraLimite;
     private Boolean estaAtiva, estaConcluida;
     private final ScheduledExecutorService scheduler;
@@ -54,13 +53,17 @@ public class Tarefa extends Evento{
         JsonSave.salvar(this, "Tarefa" + super.getId());
     }
 
-    @Override
-    public Duration getTempoRestante() {
-        return null;
-    }
-
     public void adiarTarefa(Duration tempoAdiamento){
         this.dataEHoraLimite =  this.dataEHoraLimite.plus(tempoAdiamento);
+    }
+
+    @Override
+    public LocalDateTime getDataEHora() {
+        return dataEHoraLimite;
+    }
+
+    public void setDataEHoraLimite(LocalDateTime dataEHoraLimite) {
+        this.dataEHoraLimite = dataEHoraLimite;
     }
 
     public void setEstaAtiva(Boolean estaAtiva) { //Usar para cancelamento de tarefa
@@ -69,14 +72,6 @@ public class Tarefa extends Evento{
 
     public Boolean getEstaAtiva() {
         return estaAtiva;
-    }
-
-    public LocalDateTime getDataEHoraLimite() {
-        return dataEHoraLimite;
-    }
-
-    public void setDataEHoraLimite(LocalDateTime dataEHoraLimite) {
-        this.dataEHoraLimite = dataEHoraLimite;
     }
 
     public Boolean getEstaConcluida() {

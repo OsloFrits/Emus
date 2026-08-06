@@ -1,7 +1,6 @@
 package models;
 
 import enums.EstadoPomodoro;
-import interfaces.Temporizador;
 import service.JsonSave;
 import service.TemporizadorService;
 
@@ -31,12 +30,8 @@ public class Pomodoro extends Evento{
         }else if(estadoPomodoro == EstadoPomodoro.Descansando) {
             tempoRestante = tempoDeDescanso;
         }
-
             pomodoro = scheduler.scheduleAtFixedRate(() -> {
                 tempoRestante = tempoRestante.minusSeconds(1);
-
-                System.out.println(tempoRestante); //Apenas para ver se esta funcionando
-
                 if (tempoRestante.isZero() || tempoRestante.isNegative()) {
                     pomodoro.cancel(false);
                     pararTemporizador();
