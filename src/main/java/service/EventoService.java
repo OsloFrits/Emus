@@ -1,9 +1,6 @@
 package service;
 
-import models.Alarme;
-import models.Calendario;
-import models.Evento;
-import models.Tarefa;
+import models.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +11,7 @@ public class EventoService {
     private Map<Integer, Evento> agenda;
     private Alarme alarme;
     private Tarefa tarefa;
+    EventoAgendavel agendavel;
 
     public EventoService(Calendario calendario) {
         this.calendario = calendario;
@@ -27,15 +25,8 @@ public class EventoService {
     public List<Evento> getEventoPelaData(LocalDateTime dataEHora){
         return agenda.values()
                 .stream()
-                .filter(evento -> {
-                    if(evento instanceof Alarme){
-                        return alarme.getDataEHora().equals(dataEHora);
-                    }
-                    if(evento instanceof Tarefa){
-                        return tarefa.getDataEHoraLimite().equals(dataEHora);
-                    }
-                    return false;
-                })
+                .filter(evento -> evento instanceof EventoAgendavel agendavel)
+                .filter(evento -> agendavel.getDataEHora().equals(dataEHora))
                 .toList();
     }
     public List<Tarefa> getTarefas(){
@@ -43,6 +34,13 @@ public class EventoService {
                 .stream()
                 .filter(evento -> evento instanceof Tarefa)
                 .map(evento -> (Tarefa) evento)
+                .toList();
+    }
+    public List<Alarme> getAlarmes(){
+        return agenda.values()
+                .stream()
+                .filter(evento -> evento instanceof Alarme)
+                    .map(evento -> (Alarme) evento)
                 .toList();
     }
 }
