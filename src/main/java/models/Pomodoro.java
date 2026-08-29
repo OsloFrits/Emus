@@ -50,7 +50,7 @@ public class Pomodoro extends Evento{
     @Override
     public void pararTemporizador() {
         estadoPomodoro = EstadoPomodoro.Finalizado;
-        JsonSave.salvar(this, "Pomodoro" + super.getId());
+        salvar();
     }
 
     public EstadoPomodoro getEstadoPomodoro() {

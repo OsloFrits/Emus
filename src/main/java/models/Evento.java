@@ -1,6 +1,7 @@
 package models;
 
 import interfaces.Temporizador;
+import service.JsonSave;
 
 import java.time.Duration;
 
@@ -41,6 +42,10 @@ public abstract class Evento implements Temporizador {
     @Override
     public Duration getTempoRestante() {
         return null;
+    }
+
+    public void salvar(){
+        JsonSave.salvar(this, this.getClass().getSimpleName() + id);
     }
 
     public int getPontuacao() {

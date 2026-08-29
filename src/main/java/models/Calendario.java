@@ -6,6 +6,10 @@ import java.util.Map;
 public class Calendario {
     public Map<Integer, Evento> agenda = new HashMap<>();
 
+    public void guardarEvento(Evento evento){
+        agenda.put(evento.getId(), evento);
+    }
+
     public Map<Integer, Evento> getAgenda() {
         return agenda;
     }

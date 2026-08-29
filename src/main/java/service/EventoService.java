@@ -1,46 +1,24 @@
 package service;
 
-import models.*;
+import models.Alarme;
+import models.Pomodoro;
+import models.Tarefa;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 public class EventoService {
-    private Calendario calendario;
-    private Map<Integer, Evento> agenda;
-    private Alarme alarme;
-    private Tarefa tarefa;
-    EventoAgendavel agendavel;
 
-    public EventoService(Calendario calendario) {
-        this.calendario = calendario;
-        this.agenda = calendario.getAgenda();
+    public Alarme criaAlarme(LocalDateTime dataEHora, String nome,
+                             String descricao, int pontuacao, TemporizadorService temporizadorService){
+        return new Alarme(dataEHora, nome, descricao, pontuacao, temporizadorService);
     }
-
-    public Evento getEvento(int id){
-        return agenda.get(id);
+    public Tarefa criaTarefa(String nome, String descricao, int pontuacao,
+                             LocalDateTime dataEHoraLimite, TemporizadorService temporizadorService){
+        return new Tarefa(nome, descricao, pontuacao, dataEHoraLimite, temporizadorService);
     }
-
-    public List<Evento> getEventoPelaData(LocalDateTime dataEHora){
-        return agenda.values()
-                .stream()
-                .filter(evento -> evento instanceof EventoAgendavel agendavel)
-                .filter(evento -> agendavel.getDataEHora().equals(dataEHora))
-                .toList();
-    }
-    public List<Tarefa> getTarefas(){
-        return agenda.values()
-                .stream()
-                .filter(evento -> evento instanceof Tarefa)
-                .map(evento -> (Tarefa) evento)
-                .toList();
-    }
-    public List<Alarme> getAlarmes(){
-        return agenda.values()
-                .stream()
-                .filter(evento -> evento instanceof Alarme)
-                    .map(evento -> (Alarme) evento)
-                .toList();
+    public Pomodoro criaPomodoro(String nome, String descricao, int pontuacao, Duration tempoDeFoco,
+                                 Duration tempoDeDescanso, TemporizadorService temporizadorService){
+        return new Pomodoro(nome, descricao, pontuacao, tempoDeFoco, tempoDeDescanso, temporizadorService);
     }
 }

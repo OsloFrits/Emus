@@ -22,6 +22,12 @@ public class Tarefa extends EventoAgendavel {
         this.dataEHoraLimite = dataEHoraLimite;
         this.estaAtiva = true;
         this.estaConcluida = false;
+        if(dataEHoraLimite.isAfter(LocalDateTime.now().plusMonths(2))) {
+            throw new IllegalArgumentException("A tarefa não pode ser criada para depois de 2 meses");
+        }
+        if(dataEHoraLimite.isBefore(LocalDateTime.now())){
+            throw new IllegalArgumentException("A tarefa não pode ser agendado para o passado");
+        }
     }
 
     @Override
@@ -50,7 +56,7 @@ public class Tarefa extends EventoAgendavel {
     public void pararTemporizador() {
         this.estaAtiva = false;
         this.estaConcluida = true;
-        JsonSave.salvar(this, "Tarefa" + super.getId());
+        salvar();
     }
 
     public void adiarTarefa(Duration tempoAdiamento){

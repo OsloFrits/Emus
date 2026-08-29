@@ -58,7 +58,7 @@ public class Alarme extends EventoAgendavel {
     public void pararTemporizador(){
         this.ativo = false;
         tocarAlarme();
-        JsonSave.salvar(this, "Alarme" + super.getId());
+        salvar();
     }
 
     public void tocarAlarme(){
