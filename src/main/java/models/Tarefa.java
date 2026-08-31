@@ -20,15 +20,30 @@ public class Tarefa extends EventoAgendavel {
     public Tarefa(String nome, String descricao, int pontuacao, LocalDateTime dataEHoraLimite, TemporizadorService temporizadorService){
         super(nome, descricao, pontuacao);
         this.scheduler = temporizadorService.getScheduler();
-        this.dataEHoraLimite = dataEHoraLimite;
-        this.estaAtiva = true;
-        this.estaConcluida = false;
+
         if(dataEHoraLimite.isAfter(LocalDateTime.now().plusMonths(2))) {
             throw new IllegalArgumentException("A tarefa não pode ser criada para depois de 2 meses");
         }
         if(dataEHoraLimite.isBefore(LocalDateTime.now())){
             throw new IllegalArgumentException("A tarefa não pode ser agendado para o passado");
         }
+        this.dataEHoraLimite = dataEHoraLimite;
+
+        this.estaAtiva = true;
+        this.estaConcluida = false;
+    }
+
+    public void adiarEvento(Duration tempoAdiamento){
+        this.dataEHoraLimite =  this.dataEHoraLimite.plus(tempoAdiamento);
+    }
+
+    public void prazoAtingido(){
+        System.out.println("Tarefa de ID:" + getId() + " teve o prazo atingido");
+        /*sout gostaria de add alarme??
+                se sim
+                    adiar()
+                se nao
+                    pararTemporizador()*/
     }
 
     @Override
@@ -45,10 +60,6 @@ public class Tarefa extends EventoAgendavel {
         );
     }
 
-    public void prazoAtingido(){
-        System.out.println("Tarefa de ID:" + getId() + " teve o prazo atingido");
-    }
-
     @Override
     public void pausaTemporizador() {
         estaAtiva = false;
@@ -62,10 +73,6 @@ public class Tarefa extends EventoAgendavel {
         this.estaAtiva = false;
         this.estaConcluida = true;
         salvar();
-    }
-
-    public void adiarTarefa(Duration tempoAdiamento){
-        this.dataEHoraLimite =  this.dataEHoraLimite.plus(tempoAdiamento);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package models;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public abstract class EventoAgendavel extends Evento{
@@ -11,4 +12,6 @@ public abstract class EventoAgendavel extends Evento{
     public abstract LocalDateTime getDataEHora();
 
     public abstract void prazoAtingido();
+
+    public abstract void adiarEvento(Duration tempoAdiamento);
 }

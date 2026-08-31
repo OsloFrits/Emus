@@ -18,7 +18,6 @@ public class Alarme extends EventoAgendavel {
 
     public Alarme(LocalDateTime dataEHora, String nome, String descricao, int pontuacao, TemporizadorService temporizadorService){
         super(nome, descricao, pontuacao);
-        this.dataEHora = dataEHora;
         this.scheduler = temporizadorService.getScheduler();
 
         if(dataEHora.isAfter(LocalDateTime.now().plusWeeks(2))) {
@@ -27,15 +26,25 @@ public class Alarme extends EventoAgendavel {
         if(dataEHora.isBefore(LocalDateTime.now())){
             throw new IllegalArgumentException("O alarme não pode ser agendado para o passado");
         }
+        this.dataEHora = dataEHora;
     }
 
-    public LocalDateTime adiarAlarme(int hrs, int mins, int segs){
-        this.dataEHora = this.dataEHora.plusHours(hrs).plusMinutes(mins).plusSeconds(segs);
+    public void adiarEvento(Duration tempoAdiamento){
+        this.dataEHora = this.dataEHora.plus(tempoAdiamento);
         if (ativo) {
             pausaTemporizador();
             iniciarTemporizador();
         }
-        return dataEHora;
+    }
+
+    public void prazoAtingido(){
+        //futuramente aplicar notiicaçãoservice para controlar melhor isso
+        System.out.println("Alarme de ID:" + getId() + " teve o prazo atingido");
+        /*sout gostaria de add alarme??
+                se sim
+                    adiar()
+                se nao
+                    pararTemporizador()*/
     }
 
     public void iniciarTemporizador(){
@@ -62,10 +71,6 @@ public class Alarme extends EventoAgendavel {
     public void pararTemporizador(){
         this.ativo = false;
         salvar();
-    }
-
-    public void prazoAtingido(){
-        System.out.println("Alarme de ID:" + getId() + " teve o prazo atingido");
     }
 
     @Override
