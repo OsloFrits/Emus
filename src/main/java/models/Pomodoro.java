@@ -64,6 +64,7 @@ public class Pomodoro extends Evento{
         return estadoPomodoro;
     }
 
+    @Override
     public Duration getTempoRestante() {
         return tempoRestante;
     }

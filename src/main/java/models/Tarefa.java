@@ -14,7 +14,7 @@ public class Tarefa extends EventoAgendavel {
     private Boolean estaAtiva, estaConcluida;
     private final ScheduledExecutorService scheduler;
     private ScheduledFuture<?> tarefa;
-    private boolean ativa;
+
 
 
     public Tarefa(String nome, String descricao, int pontuacao, LocalDateTime dataEHoraLimite, TemporizadorService temporizadorService){
@@ -48,10 +48,10 @@ public class Tarefa extends EventoAgendavel {
 
     @Override
     public void iniciarTemporizador() {
-        if (ativa) {
+        if (estaAtiva) {
             return;
         }
-        ativa = true;
+        estaAtiva = true;
         Duration atraso = Duration.between(LocalDateTime.now(), dataEHoraLimite);
         tarefa = scheduler.schedule(
             this::prazoAtingido,
@@ -78,6 +78,15 @@ public class Tarefa extends EventoAgendavel {
     @Override
     public LocalDateTime getDataEHora() {
         return dataEHoraLimite;
+    }
+
+    @Override
+    public Duration getTempoRestante() {
+        if (estaConcluida) {
+            return Duration.ZERO;
+        }
+        Duration restante = Duration.between(LocalDateTime.now(), dataEHoraLimite);
+        return restante.isNegative() ? Duration.ZERO : restante;
     }
 
     public void setDataEHoraLimite(LocalDateTime dataEHoraLimite) {

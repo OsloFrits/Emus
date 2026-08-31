@@ -14,7 +14,7 @@ public class Alarme extends EventoAgendavel {
     private LocalDateTime dataEHora;
     private final ScheduledExecutorService scheduler;
     private ScheduledFuture<?> alarme;
-    private boolean ativo;
+    private boolean estaAtiva;
 
     public Alarme(LocalDateTime dataEHora, String nome, String descricao, int pontuacao, TemporizadorService temporizadorService){
         super(nome, descricao, pontuacao);
@@ -31,7 +31,7 @@ public class Alarme extends EventoAgendavel {
 
     public void adiarEvento(Duration tempoAdiamento){
         this.dataEHora = this.dataEHora.plus(tempoAdiamento);
-        if (ativo) {
+        if (estaAtiva) {
             pausaTemporizador();
             iniciarTemporizador();
         }
@@ -46,13 +46,13 @@ public class Alarme extends EventoAgendavel {
                 se nao
                     pararTemporizador()*/
     }
-
+    @Override
     public void iniciarTemporizador(){
-        if(ativo){
+        if(estaAtiva){
             return;
         }
         Duration atraso = Duration.between(LocalDateTime.now(), dataEHora);
-        ativo = true;
+        estaAtiva = true;
         alarme = scheduler.schedule(
                 this::pararTemporizador, //Fazer com this:: Impede q o metodo finalizarTemporizador seja chamado antes do previsto.
                 atraso.getSeconds(),
@@ -62,20 +62,29 @@ public class Alarme extends EventoAgendavel {
 
     @Override
     public void pausaTemporizador() {
-        this.ativo = false;
+        this.estaAtiva = false;
         if(alarme != null){
             alarme.cancel(false);
         }
     }
-
+    @Override
     public void pararTemporizador(){
-        this.ativo = false;
+        this.estaAtiva = false;
         salvar();
     }
 
     @Override
     public LocalDateTime getDataEHora() {
         return dataEHora;
+    }
+
+    @Override
+    public Duration getTempoRestante() {
+        if (!estaAtiva) {
+            return Duration.ZERO;
+        }
+        Duration restante = Duration.between(LocalDateTime.now(), dataEHora);
+        return restante.isNegative() ? Duration.ZERO : restante;
     }
 
 }
