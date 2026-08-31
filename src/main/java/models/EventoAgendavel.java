@@ -10,4 +10,5 @@ public abstract class EventoAgendavel extends Evento{
 
     public abstract LocalDateTime getDataEHora();
 
+    public abstract void prazoAtingido();
 }

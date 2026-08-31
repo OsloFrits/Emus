@@ -12,8 +12,8 @@ public class Main {
         Duration tempoFoco, tempoDescanso;
         TemporizadorService temporizadorService = new TemporizadorService();
 
-        tempoFoco = Duration.ofSeconds(10);
-        tempoDescanso = Duration.ofSeconds(10);
+        tempoFoco = Duration.ofSeconds(9);
+        tempoDescanso = Duration.ofSeconds(9);
 
         Pomodoro pomodoro = new Pomodoro("joans", "é os joans", 10, tempoFoco, tempoDescanso, temporizadorService);
 
@@ -21,15 +21,13 @@ public class Main {
 
         System.out.println(pomodoro.getTempoRestante());
 
-        Thread.sleep(3000);
+        //pomodoro.pararTemporizador();
 
-        pomodoro.pausaTemporizador();
-
-        System.out.println("\n");
-
-        pomodoro.iniciarTemporizador();
+        //pomodoro.iniciarTemporizador();
 
         System.out.println(pomodoro.getTempoRestante());
+
+        //System.out.println(pomodoro.getTempoRestante());
 
     }
 }

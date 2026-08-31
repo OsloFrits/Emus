@@ -25,31 +25,38 @@ public class Pomodoro extends Evento{
 
     @Override
     public void iniciarTemporizador() {
-        if(estadoPomodoro == EstadoPomodoro.Parado) {
+        if (estadoPomodoro == EstadoPomodoro.Parado) {
             tempoRestante = tempoDeFoco;
-        }else if(estadoPomodoro == EstadoPomodoro.Descansando) {
+            estadoPomodoro = EstadoPomodoro.Executando;
+        } else if (estadoPomodoro == EstadoPomodoro.Descansando) {
             tempoRestante = tempoDeDescanso;
         }
-            pomodoro = scheduler.scheduleAtFixedRate(() -> {
-                tempoRestante = tempoRestante.minusSeconds(1);
-                if (tempoRestante.isZero() || tempoRestante.isNegative()) {
-                    pomodoro.cancel(false);
-                    pararTemporizador();
-                }
-            }, 0, 1, TimeUnit.SECONDS);
+
+        pomodoro = scheduler.scheduleAtFixedRate(() -> {
+            tempoRestante = tempoRestante.minusSeconds(1);
+            System.out.println(estadoPomodoro + " | tempoRestante: " + tempoRestante);
+            if (tempoRestante.isZero() || tempoRestante.isNegative()) {
+                pomodoro.cancel(false);
+                pararTemporizador();
+            }
+        }, 0, 1, TimeUnit.SECONDS);
     }
 
     @Override
     public void pausaTemporizador() {
         estadoPomodoro = EstadoPomodoro.Pausado;
-        if(pomodoro != null){
+        if (pomodoro != null) {
             pomodoro.cancel(false);
         }
     }
 
     @Override
     public void pararTemporizador() {
-        estadoPomodoro = EstadoPomodoro.Finalizado;
+        if (estadoPomodoro == EstadoPomodoro.Executando) {
+            estadoPomodoro = EstadoPomodoro.Descansando;
+        } else if (estadoPomodoro == EstadoPomodoro.Descansando) {
+            estadoPomodoro = EstadoPomodoro.Finalizado;
+        }
         salvar();
     }
 

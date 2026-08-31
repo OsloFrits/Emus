@@ -14,6 +14,7 @@ public class Tarefa extends EventoAgendavel {
     private Boolean estaAtiva, estaConcluida;
     private final ScheduledExecutorService scheduler;
     private ScheduledFuture<?> tarefa;
+    private boolean ativa;
 
 
     public Tarefa(String nome, String descricao, int pontuacao, LocalDateTime dataEHoraLimite, TemporizadorService temporizadorService){
@@ -32,6 +33,10 @@ public class Tarefa extends EventoAgendavel {
 
     @Override
     public void iniciarTemporizador() {
+        if (ativa) {
+            return;
+        }
+        ativa = true;
         Duration atraso = Duration.between(LocalDateTime.now(), dataEHoraLimite);
         tarefa = scheduler.schedule(
             this::prazoAtingido,

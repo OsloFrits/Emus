@@ -31,6 +31,10 @@ public class Alarme extends EventoAgendavel {
 
     public LocalDateTime adiarAlarme(int hrs, int mins, int segs){
         this.dataEHora = this.dataEHora.plusHours(hrs).plusMinutes(mins).plusSeconds(segs);
+        if (ativo) {
+            pausaTemporizador();
+            iniciarTemporizador();
+        }
         return dataEHora;
     }
 
@@ -57,12 +61,11 @@ public class Alarme extends EventoAgendavel {
 
     public void pararTemporizador(){
         this.ativo = false;
-        tocarAlarme();
         salvar();
     }
 
-    public void tocarAlarme(){
-
+    public void prazoAtingido(){
+        System.out.println("Alarme de ID:" + getId() + " teve o prazo atingido");
     }
 
     @Override
