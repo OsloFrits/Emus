@@ -1,0 +1,10 @@
+{
+  "nome" : "P",
+  "descricao" : "",
+  "pontuacao" : 0,
+  "id" : 14,
+  "tempoDeFoco" : 1500.000000000,
+  "tempoDeDescanso" : 300.000000000,
+  "tempoRestante" : 1500.000000000,
+  "estadoPomodoro" : "Parado"
+}

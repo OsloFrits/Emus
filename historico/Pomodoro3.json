@@ -1,0 +1,10 @@
+{
+  "nome" : "Proteções",
+  "descricao" : "",
+  "pontuacao" : 0,
+  "id" : 3,
+  "tempoDeFoco" : 10.000000000,
+  "tempoDeDescanso" : 10.000000000,
+  "tempoRestante" : 0.0,
+  "estadoPomodoro" : "Finalizado"
+}

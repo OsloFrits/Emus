@@ -10,8 +10,10 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Pomodoro extends Evento{
-    private Duration tempoDeFoco, tempoDeDescanso, tempoRestante;
-    private EstadoPomodoro estadoPomodoro;
+    private Duration tempoDeFoco, tempoDeDescanso;
+    private volatile Duration tempoRestante; //volatile: é alterado pela thread do scheduler e lido pela main
+    private volatile EstadoPomodoro estadoPomodoro;
+    private EstadoPomodoro estadoAntesDaPausa;
     private final ScheduledExecutorService scheduler;
     private ScheduledFuture<?> pomodoro;
 
@@ -20,44 +22,60 @@ public class Pomodoro extends Evento{
         this.scheduler = temporizadorService.getScheduler();
         this.tempoDeFoco = tempoDeFoco;
         this.tempoDeDescanso = tempoDeDescanso;
+        this.tempoRestante = tempoDeFoco;
         this.estadoPomodoro = EstadoPomodoro.Parado;
     }
 
     @Override
-    public void iniciarTemporizador() {
+    public synchronized void iniciarTemporizador() {
+        if (estadoPomodoro == EstadoPomodoro.Finalizado || estaContando()) {
+            return;
+        }
+
         if (estadoPomodoro == EstadoPomodoro.Parado) {
             tempoRestante = tempoDeFoco;
             estadoPomodoro = EstadoPomodoro.Executando;
-        } else if (estadoPomodoro == EstadoPomodoro.Descansando) {
-            tempoRestante = tempoDeDescanso;
+        } else if (estadoPomodoro == EstadoPomodoro.Pausado) {
+            estadoPomodoro = estadoAntesDaPausa; //Retoma de onde parou, sem resetar o tempoRestante
         }
 
         pomodoro = scheduler.scheduleAtFixedRate(() -> {
             tempoRestante = tempoRestante.minusSeconds(1);
             System.out.println(estadoPomodoro + " | tempoRestante: " + tempoRestante);
             if (tempoRestante.isZero() || tempoRestante.isNegative()) {
-                pomodoro.cancel(false);
                 pararTemporizador();
             }
-        }, 0, 1, TimeUnit.SECONDS);
+        }, 1, 1, TimeUnit.SECONDS);
     }
 
     @Override
-    public void pausaTemporizador() {
+    public synchronized void pausaTemporizador() {
+        if (!estaContando()) {
+            return;
+        }
+        estadoAntesDaPausa = estadoPomodoro;
         estadoPomodoro = EstadoPomodoro.Pausado;
+        pomodoro.cancel(false);
+    }
+
+    @Override
+    public synchronized void pararTemporizador() {
         if (pomodoro != null) {
             pomodoro.cancel(false);
         }
-    }
 
-    @Override
-    public void pararTemporizador() {
         if (estadoPomodoro == EstadoPomodoro.Executando) {
             estadoPomodoro = EstadoPomodoro.Descansando;
+            tempoRestante = tempoDeDescanso;
         } else if (estadoPomodoro == EstadoPomodoro.Descansando) {
             estadoPomodoro = EstadoPomodoro.Finalizado;
+            tempoRestante = Duration.ZERO;
         }
         salvar();
+    }
+
+    private boolean estaContando() {
+        return pomodoro != null && !pomodoro.isDone();
     }
 
     public EstadoPomodoro getEstadoPomodoro() {

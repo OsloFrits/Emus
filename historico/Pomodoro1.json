@@ -1,10 +1,10 @@
 {
-  "nome" : "joans",
-  "descricao" : "é os joans",
+  "nome" : "Estudo",
+  "descricao" : "Ciclo curto",
   "pontuacao" : 10,
   "id" : 1,
-  "tempoDeFoco" : 9.000000000,
-  "tempoDeDescanso" : 9.000000000,
+  "tempoDeFoco" : 2.000000000,
+  "tempoDeDescanso" : 2.000000000,
   "tempoRestante" : 0.0,
-  "estadoPomodoro" : "Descansando"
+  "estadoPomodoro" : "Finalizado"
 }

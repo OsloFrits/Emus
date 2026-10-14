@@ -1,6 +1,6 @@
 package models;
 
-import service.JsonSave;
+import interfaces.Notificador;
 import service.TemporizadorService;
 
 import java.time.Duration;
@@ -16,8 +16,9 @@ public class Alarme extends EventoAgendavel {
     private ScheduledFuture<?> alarme;
     private boolean estaAtiva;
 
-    public Alarme(LocalDateTime dataEHora, String nome, String descricao, int pontuacao, TemporizadorService temporizadorService){
-        super(nome, descricao, pontuacao);
+    public Alarme(LocalDateTime dataEHora, String nome, String descricao, int pontuacao,
+                  TemporizadorService temporizadorService, Notificador notificador){
+        super(nome, descricao, pontuacao, notificador);
         this.scheduler = temporizadorService.getScheduler();
 
         if(dataEHora.isAfter(LocalDateTime.now().plusWeeks(2))) {
@@ -29,7 +30,21 @@ public class Alarme extends EventoAgendavel {
         this.dataEHora = dataEHora;
     }
 
-    public void adiarEvento(Duration tempoAdiamento){
+    @Override
+    public synchronized void iniciarTemporizador(){
+        if(estaAtiva){
+            return;
+        }
+        Duration atraso = Duration.between(LocalDateTime.now(), dataEHora);
+        estaAtiva = true;
+        alarme = scheduler.schedule(
+                this::prazoAtingido, //Fazer com this:: Impede q o metodo finalizarTemporizador seja chamado antes do previsto.
+                atraso.toMillis(),
+                TimeUnit.MILLISECONDS
+        );
+    }
+
+    public synchronized void adiarEvento(Duration tempoAdiamento){
         this.dataEHora = this.dataEHora.plus(tempoAdiamento);
         if (estaAtiva) {
             pausaTemporizador();
@@ -37,49 +52,26 @@ public class Alarme extends EventoAgendavel {
         }
     }
 
-    public void prazoAtingido(){
-        //futuramente aplicar notiicaçãoservice para controlar melhor isso
-        System.out.println("Alarme de ID:" + getId() + " teve o prazo atingido");
-        /*sout gostaria de add alarme??
-                se sim
-                    adiar()
-                se nao
-                    pararTemporizador()*/
-    }
     @Override
-    public void iniciarTemporizador(){
-        if(estaAtiva){
-            return;
-        }
-        Duration atraso = Duration.between(LocalDateTime.now(), dataEHora);
-        estaAtiva = true;
-        alarme = scheduler.schedule(
-                this::pararTemporizador, //Fazer com this:: Impede q o metodo finalizarTemporizador seja chamado antes do previsto.
-                atraso.getSeconds(),
-                TimeUnit.SECONDS
-        );
-    }
-
-    @Override
-    public void pausaTemporizador() {
+    public synchronized void pausaTemporizador() {
         this.estaAtiva = false;
         if(alarme != null){
             alarme.cancel(false);
         }
     }
     @Override
-    public void pararTemporizador(){
+    public synchronized void pararTemporizador(){
         this.estaAtiva = false;
         salvar();
     }
 
     @Override
-    public LocalDateTime getDataEHora() {
+    public synchronized LocalDateTime getDataEHora() {
         return dataEHora;
     }
 
     @Override
-    public Duration getTempoRestante() {
+    public synchronized Duration getTempoRestante() {
         if (!estaAtiva) {
             return Duration.ZERO;
         }

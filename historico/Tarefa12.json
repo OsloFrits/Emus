@@ -1,0 +1,10 @@
+{
+  "nome" : "Relatório",
+  "descricao" : "Entregar relatório",
+  "pontuacao" : 8,
+  "id" : 12,
+  "estaAtiva" : false,
+  "estaConcluida" : true,
+  "tempoRestante" : 0.0,
+  "dataEHora" : [ 2026, 10, 15, 12, 22, 36, 49705800 ]
+}

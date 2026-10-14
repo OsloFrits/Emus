@@ -1,6 +1,6 @@
 package models;
 
-import service.JsonSave;
+import interfaces.Notificador;
 import service.TemporizadorService;
 
 import java.time.Duration;
@@ -11,14 +11,15 @@ import java.util.concurrent.TimeUnit;
 
 public class Tarefa extends EventoAgendavel {
     private LocalDateTime dataEHoraLimite;
-    private Boolean estaAtiva, estaConcluida;
+    private boolean estaAtiva=false, estaConcluida=false;
     private final ScheduledExecutorService scheduler;
     private ScheduledFuture<?> tarefa;
 
 
 
-    public Tarefa(String nome, String descricao, int pontuacao, LocalDateTime dataEHoraLimite, TemporizadorService temporizadorService){
-        super(nome, descricao, pontuacao);
+    public Tarefa(String nome, String descricao, int pontuacao, LocalDateTime dataEHoraLimite,
+                  TemporizadorService temporizadorService, Notificador notificador){
+        super(nome, descricao, pontuacao, notificador);
         this.scheduler = temporizadorService.getScheduler();
 
         if(dataEHoraLimite.isAfter(LocalDateTime.now().plusMonths(2))) {
@@ -29,25 +30,12 @@ public class Tarefa extends EventoAgendavel {
         }
         this.dataEHoraLimite = dataEHoraLimite;
 
-        this.estaAtiva = true;
+        iniciarTemporizador();
         this.estaConcluida = false;
     }
 
-    public void adiarEvento(Duration tempoAdiamento){
-        this.dataEHoraLimite =  this.dataEHoraLimite.plus(tempoAdiamento);
-    }
-
-    public void prazoAtingido(){
-        System.out.println("Tarefa de ID:" + getId() + " teve o prazo atingido");
-        /*sout gostaria de add alarme??
-                se sim
-                    adiar()
-                se nao
-                    pararTemporizador()*/
-    }
-
     @Override
-    public void iniciarTemporizador() {
+    public synchronized void iniciarTemporizador() {
         if (estaAtiva) {
             return;
         }
@@ -55,13 +43,23 @@ public class Tarefa extends EventoAgendavel {
         Duration atraso = Duration.between(LocalDateTime.now(), dataEHoraLimite);
         tarefa = scheduler.schedule(
             this::prazoAtingido,
-            atraso.getSeconds(),
-            TimeUnit.SECONDS
+            atraso.toMillis(),
+            TimeUnit.MILLISECONDS
         );
     }
 
+    public synchronized void adiarEvento(Duration tempoAdiamento){
+        this.dataEHoraLimite =  this.dataEHoraLimite.plus(tempoAdiamento);
+        if (estaAtiva) {
+            pausaTemporizador();
+            iniciarTemporizador();
+        }else{
+            iniciarTemporizador();
+        }
+    }
+
     @Override
-    public void pausaTemporizador() {
+    public synchronized void pausaTemporizador() {
         estaAtiva = false;
         if(tarefa != null){
             tarefa.cancel(false);
@@ -69,19 +67,19 @@ public class Tarefa extends EventoAgendavel {
     }
 
     @Override
-    public void pararTemporizador() {
+    public synchronized void pararTemporizador() {
         this.estaAtiva = false;
         this.estaConcluida = true;
         salvar();
     }
 
     @Override
-    public LocalDateTime getDataEHora() {
+    public synchronized LocalDateTime getDataEHora() {
         return dataEHoraLimite;
     }
 
     @Override
-    public Duration getTempoRestante() {
+    public synchronized Duration getTempoRestante() {
         if (estaConcluida) {
             return Duration.ZERO;
         }
@@ -93,7 +91,7 @@ public class Tarefa extends EventoAgendavel {
         this.dataEHoraLimite = dataEHoraLimite;
     }
 
-    public void setEstaAtiva(Boolean estaAtiva) { //Usar para cancelamento de tarefa
+    public void setEstaAtiva(boolean estaAtiva) { //Usar para cancelamento de tarefa
         this.estaAtiva = estaAtiva;
     }
 
@@ -105,7 +103,7 @@ public class Tarefa extends EventoAgendavel {
         return estaConcluida;
     }
 
-    public void setEstaConcluida(Boolean estaConcluida) {
+    public void setEstaConcluida(boolean estaConcluida) {
         this.estaConcluida = estaConcluida;
     }
 }
