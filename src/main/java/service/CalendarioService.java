@@ -18,8 +18,16 @@ public class CalendarioService {
         this.agenda = calendario.getAgenda();
     }
 
+    public void guardarEvento(Evento evento){
+        agenda.put(evento.getId(), evento);
+    }
+
     public Evento getEvento(int id){
         return agenda.get(id);
+    }
+
+    public List<Evento> getEventos(){
+        return agenda.values().stream().toList();
     }
 
     public List<Evento> getEventosPelaData(LocalDateTime dataEHora){
@@ -44,9 +52,6 @@ public class CalendarioService {
                 .toList();
     }
 
-    public EventoAgendavel criarEventoAgendavel(String nome, String descricao, int pontuacao){
-        return null;
-    }
 
     public void deleteEvento(int id){
         if(agenda.containsKey(id)) {

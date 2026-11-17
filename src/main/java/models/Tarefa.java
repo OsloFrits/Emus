@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Tarefa extends EventoAgendavel {
     private LocalDateTime dataEHoraLimite;
-    private boolean estaAtiva=false, estaConcluida=false;
     private ScheduledFuture<?> tarefa;
+    private boolean estaAtiva=false, estaConcluida=false;
 
 
 
