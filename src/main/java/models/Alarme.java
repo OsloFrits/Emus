@@ -12,14 +12,12 @@ import java.util.concurrent.TimeUnit;
 public class Alarme extends EventoAgendavel {
 
     private LocalDateTime dataEHora;
-    private final ScheduledExecutorService scheduler;
     private ScheduledFuture<?> alarme;
     private boolean estaAtiva;
 
     public Alarme(LocalDateTime dataEHora, String nome, String descricao, int pontuacao,
                   TemporizadorService temporizadorService, Notificador notificador){
-        super(nome, descricao, pontuacao, notificador);
-        this.scheduler = temporizadorService.getScheduler();
+        super(nome, descricao, pontuacao, temporizadorService, notificador);
 
         if(dataEHora.isAfter(LocalDateTime.now().plusWeeks(2))) {
             throw new IllegalArgumentException("O alarme não pode ser agendado para mais de 2 semanas");
@@ -37,8 +35,8 @@ public class Alarme extends EventoAgendavel {
         }
         Duration atraso = Duration.between(LocalDateTime.now(), dataEHora);
         estaAtiva = true;
-        alarme = scheduler.schedule(
-                this::prazoAtingido, //Fazer com this:: Impede q o metodo finalizarTemporizador seja chamado antes do previsto.
+        alarme = this.getScheduler().schedule(
+                this::prazoAtingido, //Fazer com this:: impede q o método finalizarTemporizador seja chamado antes do previsto.
                 atraso.toMillis(),
                 TimeUnit.MILLISECONDS
         );

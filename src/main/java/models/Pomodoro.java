@@ -14,12 +14,11 @@ public class Pomodoro extends Evento{
     private volatile Duration tempoRestante; //volatile: é alterado pela thread do scheduler e lido pela main
     private volatile EstadoPomodoro estadoPomodoro;
     private EstadoPomodoro estadoAntesDaPausa;
-    private final ScheduledExecutorService scheduler;
     private ScheduledFuture<?> pomodoro;
 
-    public Pomodoro(String nome, String descricao, int pontuacao, Duration tempoDeFoco, Duration tempoDeDescanso, TemporizadorService temporizadorService) {
-        super(nome, descricao, pontuacao);
-        this.scheduler = temporizadorService.getScheduler();
+    public Pomodoro(String nome, String descricao, int pontuacao, Duration tempoDeFoco, Duration tempoDeDescanso,
+                    TemporizadorService temporizadorService) {
+        super(nome, descricao, pontuacao, temporizadorService);
         this.tempoDeFoco = tempoDeFoco;
         this.tempoDeDescanso = tempoDeDescanso;
         this.tempoRestante = tempoDeFoco;
@@ -39,9 +38,8 @@ public class Pomodoro extends Evento{
             estadoPomodoro = estadoAntesDaPausa; //Retoma de onde parou, sem resetar o tempoRestante
         }
 
-        pomodoro = scheduler.scheduleAtFixedRate(() -> {
+        pomodoro = this.getScheduler().scheduleAtFixedRate(() -> {
             tempoRestante = tempoRestante.minusSeconds(1);
-            System.out.println(estadoPomodoro + " | tempoRestante: " + tempoRestante);
             if (tempoRestante.isZero() || tempoRestante.isNegative()) {
                 pararTemporizador();
             }

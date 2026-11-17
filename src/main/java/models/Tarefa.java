@@ -12,15 +12,13 @@ import java.util.concurrent.TimeUnit;
 public class Tarefa extends EventoAgendavel {
     private LocalDateTime dataEHoraLimite;
     private boolean estaAtiva=false, estaConcluida=false;
-    private final ScheduledExecutorService scheduler;
     private ScheduledFuture<?> tarefa;
 
 
 
     public Tarefa(String nome, String descricao, int pontuacao, LocalDateTime dataEHoraLimite,
                   TemporizadorService temporizadorService, Notificador notificador){
-        super(nome, descricao, pontuacao, notificador);
-        this.scheduler = temporizadorService.getScheduler();
+        super(nome, descricao, pontuacao, temporizadorService, notificador);
 
         if(dataEHoraLimite.isAfter(LocalDateTime.now().plusMonths(2))) {
             throw new IllegalArgumentException("A tarefa não pode ser criada para depois de 2 meses");
@@ -41,7 +39,7 @@ public class Tarefa extends EventoAgendavel {
         }
         estaAtiva = true;
         Duration atraso = Duration.between(LocalDateTime.now(), dataEHoraLimite);
-        tarefa = scheduler.schedule(
+        tarefa = this.getScheduler().schedule(
             this::prazoAtingido,
             atraso.toMillis(),
             TimeUnit.MILLISECONDS

@@ -1,6 +1,7 @@
 package models;
 
 import interfaces.Notificador;
+import service.TemporizadorService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -8,8 +9,8 @@ import java.time.LocalDateTime;
 public abstract class EventoAgendavel extends Evento{
     private final Notificador notificador;
 
-    public EventoAgendavel(String nome, String descricao, int pontuacao, Notificador notificador) {
-        super(nome, descricao, pontuacao);
+    public EventoAgendavel(String nome, String descricao, int pontuacao, TemporizadorService temporizadorService, Notificador notificador) {
+        super(nome, descricao, pontuacao, temporizadorService);
         this.notificador = notificador;
     }
 

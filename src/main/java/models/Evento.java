@@ -2,24 +2,30 @@ package models;
 
 import interfaces.Temporizador;
 import service.JsonSave;
+import service.TemporizadorService;
+
+import java.util.concurrent.ScheduledExecutorService;
 
 public abstract class Evento implements Temporizador {
     private String nome="", descricao="";
     private int pontuacao=0, id;
     private static int proximoId=1;
+    private ScheduledExecutorService scheduler;
 
-    public Evento(String nome, String descricao, int pontuacao) {
+    public Evento(String nome, String descricao, int pontuacao, TemporizadorService temporizadorService) {
         this.nome = nome;
         this.descricao = descricao;
         this.pontuacao = pontuacao;
         this.id = proximoId++;
-    }
-
-    protected Evento() {
+        this.scheduler = temporizadorService.getScheduler();
     }
 
     public int getId() {
         return id;
+    }
+
+    protected ScheduledExecutorService getScheduler() {
+        return scheduler;
     }
 
     public void salvar(){

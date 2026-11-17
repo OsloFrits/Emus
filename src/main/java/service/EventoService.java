@@ -2,6 +2,7 @@ package service;
 
 import interfaces.Notificador;
 import models.Alarme;
+import models.Evento;
 import models.Pomodoro;
 import models.Tarefa;
 
@@ -9,6 +10,12 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class EventoService {
+
+    public Evento criarEventoAgendavel(String nome, String descricao, int pontuacao,
+                              TemporizadorService temporizadorService, Notificador notificador, LocalDateTime dataEHora){
+
+        return null;
+    }
 
     public Alarme criaAlarme(LocalDateTime dataEHora, String nome, String descricao, int pontuacao,
                              TemporizadorService temporizadorService, Notificador notificador){
