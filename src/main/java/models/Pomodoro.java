@@ -16,7 +16,7 @@ public class Pomodoro extends Evento{
     private EstadoPomodoro estadoAntesDaPausa;
     private ScheduledFuture<?> pomodoro;
 
-    public Pomodoro(String nome, String descricao, int pontuacao, Duration tempoDeFoco, Duration tempoDeDescanso,
+    public Pomodoro(String nome, String descricao, Duration tempoDeFoco, Duration tempoDeDescanso, int pontuacao,
                     TemporizadorService temporizadorService) {
         super(nome, descricao, pontuacao, temporizadorService);
         this.tempoDeFoco = tempoDeFoco;

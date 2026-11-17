@@ -36,7 +36,7 @@ public abstract class Evento implements Temporizador {
         return pontuacao;
     }
 
-    public void setPontuacao(int pontuacao) {
+    protected void setPontuacao(int pontuacao) {
         this.pontuacao = pontuacao;
     }
 
@@ -44,7 +44,7 @@ public abstract class Evento implements Temporizador {
         return descricao;
     }
 
-    public void setDescricao(String descricao) {
+    protected void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
@@ -52,7 +52,7 @@ public abstract class Evento implements Temporizador {
         return nome;
     }
 
-    public void setNome(String nome) {
+    protected void setNome(String nome) {
         this.nome = nome;
     }
 }

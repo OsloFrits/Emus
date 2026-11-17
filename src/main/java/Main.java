@@ -52,8 +52,8 @@ public class Main {
     // ---------- Pomodoro ----------
 
     private static void testarCicloPomodoro(TemporizadorService temporizadorService) throws Exception {
-        Pomodoro pomodoro = new Pomodoro("Estudo", "Ciclo curto", 10,
-                Duration.ofSeconds(2), Duration.ofSeconds(2), temporizadorService);
+        Pomodoro pomodoro = new Pomodoro("Estudo", "Ciclo curto",
+                Duration.ofSeconds(2), Duration.ofSeconds(2), 10, temporizadorService);
         Files.deleteIfExists(arquivoHistorico("Pomodoro", pomodoro.getId()));
 
         verificar(pomodoro.getEstadoPomodoro() == EstadoPomodoro.Parado, "estado inicial é Parado");
@@ -71,8 +71,8 @@ public class Main {
     }
 
     private static void testarPausaPomodoro(TemporizadorService temporizadorService) throws InterruptedException {
-        Pomodoro pomodoro = new Pomodoro("Pausa", "Teste de pausa", 5,
-                Duration.ofSeconds(5), Duration.ofSeconds(5), temporizadorService);
+        Pomodoro pomodoro = new Pomodoro("Pausa", "Teste de pausa",
+                Duration.ofSeconds(5), Duration.ofSeconds(5), 5, temporizadorService);
 
         pomodoro.iniciarTemporizador();
         Thread.sleep(1500);
@@ -92,8 +92,8 @@ public class Main {
     }
 
     private static void testarProtecoesPomodoro(TemporizadorService temporizadorService) throws InterruptedException {
-        Pomodoro pomodoro = new Pomodoro("Proteções", "", 0,
-                Duration.ofSeconds(10), Duration.ofSeconds(10), temporizadorService);
+        Pomodoro pomodoro = new Pomodoro("Proteções", "",
+                Duration.ofSeconds(10), Duration.ofSeconds(10), 0, temporizadorService);
 
         pomodoro.iniciarTemporizador();
         pomodoro.iniciarTemporizador();
@@ -119,12 +119,12 @@ public class Main {
     // ---------- Alarme ----------
 
     private static void testarValidacoesAlarme(TemporizadorService temporizadorService) {
-        verificarLanca(() -> new Alarme(LocalDateTime.now().minusMinutes(1), "Passado", "", 0, temporizadorService, notificador),
+        verificarLanca(() -> new Alarme("Passado", "", LocalDateTime.now().minusMinutes(1), 0, temporizadorService, notificador),
                 "alarme no passado lança exceção");
-        verificarLanca(() -> new Alarme(LocalDateTime.now().plusWeeks(3), "Longe", "", 0, temporizadorService, notificador),
+        verificarLanca(() -> new Alarme("Longe", "", LocalDateTime.now().plusWeeks(3), 0, temporizadorService, notificador),
                 "alarme para mais de 2 semanas lança exceção");
 
-        Alarme alarme = new Alarme(LocalDateTime.now().plusHours(1), "Ok", "", 0, temporizadorService, notificador);
+        Alarme alarme = new Alarme("Ok", "", LocalDateTime.now().plusHours(1), 0, temporizadorService, notificador);
         verificar(alarme.getTempoRestante().isZero(), "alarme não iniciado tem tempo restante zero");
 
         LocalDateTime dataOriginal = alarme.getDataEHora();
@@ -133,7 +133,7 @@ public class Main {
     }
 
     private static void testarDisparoAlarme(TemporizadorService temporizadorService) throws Exception {
-        Alarme alarme = new Alarme(LocalDateTime.now().plusSeconds(2), "Acordar", "Alarme curto", 3, temporizadorService, notificador);
+        Alarme alarme = new Alarme("Acordar", "Alarme curto", LocalDateTime.now().plusSeconds(2), 3, temporizadorService, notificador);
 
         alarme.iniciarTemporizador();
         verificar(!alarme.getTempoRestante().isZero(), "alarme ativo tem tempo restante > 0");
@@ -147,7 +147,7 @@ public class Main {
     }
 
     private static void testarAdiarAlarme(TemporizadorService temporizadorService) throws Exception {
-        Alarme alarme = new Alarme(LocalDateTime.now().plusSeconds(1), "Soneca", "", 0, temporizadorService, notificador);
+        Alarme alarme = new Alarme("Soneca", "", LocalDateTime.now().plusSeconds(1), 0, temporizadorService, notificador);
 
         alarme.iniciarTemporizador();
         alarme.adiarEvento(Duration.ofSeconds(2));
@@ -162,19 +162,19 @@ public class Main {
     // ---------- Tarefa ----------
 
     private static void testarValidacoesTarefa(TemporizadorService temporizadorService) {
-        verificarLanca(() -> new Tarefa("Passado", "", 0, LocalDateTime.now().minusMinutes(1), temporizadorService, notificador),
+        verificarLanca(() -> new Tarefa("Passado", "", LocalDateTime.now().minusMinutes(1), 0, temporizadorService, notificador),
                 "tarefa no passado lança exceção");
-        verificarLanca(() -> new Tarefa("Longe", "", 0, LocalDateTime.now().plusMonths(3), temporizadorService, notificador),
+        verificarLanca(() -> new Tarefa("Longe", "", LocalDateTime.now().plusMonths(3), 0, temporizadorService, notificador),
                 "tarefa para mais de 2 meses lança exceção");
 
-        Tarefa tarefa = new Tarefa("Ok", "", 0, LocalDateTime.now().plusDays(1), temporizadorService, notificador);
+        Tarefa tarefa = new Tarefa("Ok", "", LocalDateTime.now().plusDays(1), 0, temporizadorService, notificador);
         verificar(tarefa.getEstaAtiva(), "tarefa nova está ativa");
         verificar(!tarefa.getEstaConcluida(), "tarefa nova não está concluída");
     }
 
     private static void testarAdiarEConcluirTarefa(TemporizadorService temporizadorService) throws Exception {
-        Tarefa tarefa = new Tarefa("Relatório", "Entregar relatório", 8,
-                LocalDateTime.now().plusDays(1), temporizadorService, notificador);
+        Tarefa tarefa = new Tarefa("Relatório", "Entregar relatório",
+                LocalDateTime.now().plusDays(1), 8, temporizadorService, notificador);
         Files.deleteIfExists(arquivoHistorico("Tarefa", tarefa.getId()));
 
         LocalDateTime dataOriginal = tarefa.getDataEHora();
@@ -190,7 +190,7 @@ public class Main {
     }
 
     private static void testarNotificarEAdiarTarefa(TemporizadorService temporizadorService) throws Exception {
-        Tarefa tarefa = new Tarefa("Prova", "", 0, LocalDateTime.now().plusSeconds(1), temporizadorService, notificador);
+        Tarefa tarefa = new Tarefa("Prova", "", LocalDateTime.now().plusSeconds(1), 0, temporizadorService, notificador);
 
         Thread.sleep(1500);
         verificar(notificados.contains(tarefa), "tarefa notifica sozinha (inicia no construtor)");
@@ -208,13 +208,13 @@ public class Main {
         Calendario calendario = new Calendario();
         CalendarioService calendarioService = new CalendarioService(calendario);
 
-        Tarefa tarefa = new Tarefa("T", "", 0, LocalDateTime.now().plusDays(1), temporizadorService, notificador);
-        Alarme alarme = new Alarme(LocalDateTime.now().plusDays(1), "A", "", 0, temporizadorService, notificador);
-        Pomodoro pomodoro = new Pomodoro("P", "", 0, Duration.ofMinutes(25), Duration.ofMinutes(5), temporizadorService);
+        Tarefa tarefa = new Tarefa("T", "", LocalDateTime.now().plusDays(1), 0, temporizadorService, notificador);
+        Alarme alarme = new Alarme("A", "", LocalDateTime.now().plusDays(1), 0, temporizadorService, notificador);
+        Pomodoro pomodoro = new Pomodoro("P", "", Duration.ofMinutes(25), Duration.ofMinutes(5), 0, temporizadorService);
 
-        calendario.guardarEvento(tarefa);
-        calendario.guardarEvento(alarme);
-        calendario.guardarEvento(pomodoro);
+        calendarioService.guardarEvento(tarefa);
+        calendarioService.guardarEvento(alarme);
+        calendarioService.guardarEvento(pomodoro);
 
         verificar(calendario.getAgenda().size() == 3, "agenda guarda 3 eventos");
         verificar(calendarioService.getEvento(alarme.getId()) == alarme, "getEvento encontra pelo id");

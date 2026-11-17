@@ -15,7 +15,7 @@ public class Alarme extends EventoAgendavel {
     private ScheduledFuture<?> alarme;
     private boolean estaAtiva;
 
-    public Alarme(LocalDateTime dataEHora, String nome, String descricao, int pontuacao,
+    public Alarme(String nome, String descricao, LocalDateTime dataEHora, int pontuacao,
                   TemporizadorService temporizadorService, Notificador notificador){
         super(nome, descricao, pontuacao, temporizadorService, notificador);
 

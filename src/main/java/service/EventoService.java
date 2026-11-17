@@ -11,22 +11,24 @@ import java.time.LocalDateTime;
 
 public class EventoService {
 
-    public Evento criarEventoAgendavel(String nome, String descricao, int pontuacao,
-                              TemporizadorService temporizadorService, Notificador notificador, LocalDateTime dataEHora){
+    CalendarioService calendarioService;
 
-        return null;
-    }
-
-    public Alarme criaAlarme(LocalDateTime dataEHora, String nome, String descricao, int pontuacao,
+    public Alarme criaAlarme(String nome, String descricao, LocalDateTime dataEHora, int pontuacao,
                              TemporizadorService temporizadorService, Notificador notificador){
-        return new Alarme(dataEHora, nome, descricao, pontuacao, temporizadorService, notificador);
+        Alarme alarme = new Alarme(nome, descricao, dataEHora, pontuacao, temporizadorService, notificador);
+        calendarioService.guardarEvento(alarme);
+        return alarme;
     }
-    public Tarefa criaTarefa(String nome, String descricao, int pontuacao, LocalDateTime dataEHoraLimite,
+    public Tarefa criaTarefa(String nome, String descricao, LocalDateTime dataEHoraLimite, int pontuacao,
                              TemporizadorService temporizadorService, Notificador notificador){
-        return new Tarefa(nome, descricao, pontuacao, dataEHoraLimite, temporizadorService, notificador);
+        Tarefa tarefa = new Tarefa(nome, descricao, dataEHoraLimite, pontuacao, temporizadorService, notificador);
+        calendarioService.guardarEvento(tarefa);
+        return tarefa;
     }
-    public Pomodoro criaPomodoro(String nome, String descricao, int pontuacao, Duration tempoDeFoco,
-                                 Duration tempoDeDescanso, TemporizadorService temporizadorService){
-        return new Pomodoro(nome, descricao, pontuacao, tempoDeFoco, tempoDeDescanso, temporizadorService);
+    public Pomodoro criaPomodoro(String nome, String descricao, Duration tempoDeFoco, Duration tempoDeDescanso,
+                                 int pontuacao, TemporizadorService temporizadorService){
+        Pomodoro pomodoro = new Pomodoro(nome, descricao, tempoDeFoco, tempoDeDescanso, pontuacao, temporizadorService);
+        calendarioService.guardarEvento(pomodoro);
+        return pomodoro;
     }
 }

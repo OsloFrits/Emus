@@ -16,7 +16,7 @@ public class Tarefa extends EventoAgendavel {
 
 
 
-    public Tarefa(String nome, String descricao, int pontuacao, LocalDateTime dataEHoraLimite,
+    public Tarefa(String nome, String descricao, LocalDateTime dataEHoraLimite, int pontuacao,
                   TemporizadorService temporizadorService, Notificador notificador){
         super(nome, descricao, pontuacao, temporizadorService, notificador);
 

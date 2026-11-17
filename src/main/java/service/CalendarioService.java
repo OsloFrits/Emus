@@ -10,42 +10,40 @@ import java.util.Map;
 
 public class CalendarioService {
     private Calendario calendario;
-    private Map<Integer, Evento> agenda;
     EventoAgendavel agendavel;
 
     public CalendarioService(Calendario calendario) {
         this.calendario = calendario;
-        this.agenda = calendario.getAgenda();
     }
 
     public void guardarEvento(Evento evento){
-        agenda.put(evento.getId(), evento);
+        calendario.getAgenda().put(evento.getId(), evento);
     }
 
     public Evento getEvento(int id){
-        return agenda.get(id);
+        return calendario.getAgenda().get(id);
     }
 
     public List<Evento> getEventos(){
-        return agenda.values().stream().toList();
+        return calendario.getAgenda().values().stream().toList();
     }
 
     public List<Evento> getEventosPelaData(LocalDateTime dataEHora){
-        return agenda.values()
+        return calendario.getAgenda().values()
                 .stream()
                 .filter(evento -> evento instanceof EventoAgendavel agendavel)
                 .filter(evento -> agendavel.getDataEHora().equals(dataEHora))
                 .toList();
     }
     public List<Tarefa> getTarefas(){
-        return agenda.values()
+        return calendario.getAgenda().values()
                 .stream()
                 .filter(evento -> evento instanceof Tarefa)
                 .map(evento -> (Tarefa) evento)
                 .toList();
     }
     public List<Alarme> getAlarmes(){
-        return agenda.values()
+        return calendario.getAgenda().values()
                 .stream()
                 .filter(evento -> evento instanceof Alarme)
                 .map(evento -> (Alarme) evento)
@@ -54,10 +52,10 @@ public class CalendarioService {
 
 
     public void deleteEvento(int id){
-        if(agenda.containsKey(id)) {
-            Evento evento = agenda.get(id);
+        if(calendario.getAgenda().containsKey(id)) {
+            Evento evento = calendario.getAgenda().get(id);
             evento.salvar();
-            agenda.remove(id);
+            calendario.getAgenda().remove(id);
         }else {
             throw new IllegalArgumentException("Evento de id:" + id + " não encontrado");
         }
