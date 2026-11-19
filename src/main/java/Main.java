@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Main {
-    private static int passou = 0, falhou = 0;
+/*    private static int passou = 0, falhou = 0;
 
     // Notificador de teste: imprime no console e guarda quem foi notificado para os testes conferirem.
     // CopyOnWriteArrayList porque quem adiciona é a thread do scheduler e quem lê é a main.
@@ -259,5 +259,5 @@ public class Main {
 
     private static Path arquivoHistorico(String tipo, int id) {
         return Path.of("historico", tipo + id + ".json");
-    }
+    }*/
 }

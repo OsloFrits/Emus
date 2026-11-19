@@ -5,12 +5,10 @@ import service.TemporizadorService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Alarme extends EventoAgendavel {
-
     private LocalDateTime dataEHora;
     private ScheduledFuture<?> alarme;
     private boolean estaAtiva;

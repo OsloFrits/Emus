@@ -13,11 +13,19 @@ public class Usuario {
         this.agenda = new Calendario();
     }
 
+    public void adicionaPontos(int pontos) {
+        if(pontos>=0) {
+            pontuacaoTotal += pontos;
+        }else{
+            throw new IllegalArgumentException("Valor negativo");
+        }
+    }
+
     public String getNome() {
         return nome;
     }
 
-    private void setNome(String nome) {
+    public void setNome(String nome) {
         this.nome = nome;
     }
 
@@ -25,7 +33,7 @@ public class Usuario {
         return id;
     }
 
-    private void setId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -33,7 +41,7 @@ public class Usuario {
         return pontuacaoTotal;
     }
 
-    private void setPontuacaoTotal(int pontuacaoTotal) {
+    public void setPontuacaoTotal(int pontuacaoTotal) {
         this.pontuacaoTotal = pontuacaoTotal;
     }
 
@@ -41,7 +49,7 @@ public class Usuario {
         return agenda;
     }
 
-    private void setAgenda(Calendario agenda) {
+    public void setAgenda(Calendario agenda) {
         this.agenda = agenda;
     }
 }

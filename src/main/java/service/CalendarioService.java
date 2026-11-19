@@ -1,48 +1,40 @@
 package service;
 
-import interfaces.Notificador;
 import models.*;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 public class CalendarioService {
-    private Calendario calendario;
-    EventoAgendavel agendavel;
+    private EventoAgendavel agendavel;
 
-    public CalendarioService(Calendario calendario) {
-        this.calendario = calendario;
-    }
-
-    public void guardarEvento(Evento evento){
+    public void guardarEvento(Calendario calendario, Evento evento){
         calendario.getAgenda().put(evento.getId(), evento);
     }
 
-    public Evento getEvento(int id){
+    public Evento getEvento(Calendario calendario, int id){
         return calendario.getAgenda().get(id);
     }
 
-    public List<Evento> getEventos(){
+    public List<Evento> getEventos(Calendario calendario){
         return calendario.getAgenda().values().stream().toList();
     }
 
-    public List<Evento> getEventosPelaData(LocalDateTime dataEHora){
+    public List<Evento> getEventosPelaData(Calendario calendario, LocalDateTime dataEHora){
         return calendario.getAgenda().values()
                 .stream()
                 .filter(evento -> evento instanceof EventoAgendavel agendavel)
                 .filter(evento -> agendavel.getDataEHora().equals(dataEHora))
                 .toList();
     }
-    public List<Tarefa> getTarefas(){
+    public List<Tarefa> getTarefas(Calendario calendario){
         return calendario.getAgenda().values()
                 .stream()
                 .filter(evento -> evento instanceof Tarefa)
                 .map(evento -> (Tarefa) evento)
                 .toList();
     }
-    public List<Alarme> getAlarmes(){
+    public List<Alarme> getAlarmes(Calendario calendario){
         return calendario.getAgenda().values()
                 .stream()
                 .filter(evento -> evento instanceof Alarme)
@@ -50,8 +42,7 @@ public class CalendarioService {
                 .toList();
     }
 
-
-    public void deleteEvento(int id){
+    public void deleteEvento(Calendario calendario, int id){
         if(calendario.getAgenda().containsKey(id)) {
             Evento evento = calendario.getAgenda().get(id);
             evento.salvar();

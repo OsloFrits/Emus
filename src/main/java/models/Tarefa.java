@@ -5,7 +5,6 @@ import service.TemporizadorService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -85,11 +84,11 @@ public class Tarefa extends EventoAgendavel {
         return restante.isNegative() ? Duration.ZERO : restante;
     }
 
-    public void setDataEHoraLimite(LocalDateTime dataEHoraLimite) {
+    private void setDataEHoraLimite(LocalDateTime dataEHoraLimite) {
         this.dataEHoraLimite = dataEHoraLimite;
     }
 
-    public void setEstaAtiva(boolean estaAtiva) { //Usar para cancelamento de tarefa
+    private void setEstaAtiva(boolean estaAtiva) { //Usar para cancelamento de tarefa
         this.estaAtiva = estaAtiva;
     }
 

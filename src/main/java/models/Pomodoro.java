@@ -1,11 +1,9 @@
 package models;
 
 import enums.EstadoPomodoro;
-import service.JsonSave;
 import service.TemporizadorService;
 
 import java.time.Duration;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
